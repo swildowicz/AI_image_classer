@@ -24,13 +24,13 @@ from keras.preprocessing import image
 import random
 from tensorflow.keras.preprocessing.image import img_to_array, load_img
 
-DIR = '/Users/sebastian/Documents/Doktorat/Zajecia/SSI/'
+DIR = '/Users/sebastian/Documents/Doktorat/Zajecia/SSI/projekt/'
 
 class data_preparation():
   def __init__(self, dest_dir):
     self.data_zip_folder = DIR + 'data_folder.zip'
     self.data_folder = DIR + 'data_folder/'
-    self.data_folder_train = DIR + 'data_folder_train'
+    self.data_folder_train = '/Users/sebastian/Documents/Doktorat/Zajecia/SSI/data_folder_train'
     self.photos_turtles = self.data_folder + 'turtles/'
     self.photos_fishes = self.data_folder + 'fishes/'
     self.mixed_photos = DIR + 'mixed/'
@@ -64,8 +64,10 @@ class data_preparation():
       self.sorted_data.append(0)
 
   def clear(self):
-    shutil.rmtree(self.mixed_photos)
-    shutil.rmtree(self.sorted_photos)
+    if os.path.exists(self.mixed_photos):
+      shutil.rmtree(self.mixed_photos)
+    if os.path.exists(self.sorted_photos):
+      shutil.rmtree(self.sorted_photos)
 
   def mix_pictures(self):    
     seed(1)
@@ -103,7 +105,8 @@ class data_preparation():
       img = mpimg.imread(img_path)
       plt.imshow(img)
     fig.suptitle("MIXED IMAGES")
-    plt.show()
+    plt.savefig(DIR + 'output_plots/' + "mix_img.png")
+    # plt.show()
 
   def show_ref_images(self):
     ''' Parameters for our graph; we'll output images in a 4x4 configuration '''
@@ -129,7 +132,8 @@ class data_preparation():
       plt.imshow(img)
 
     fig.suptitle("REFERENCES IMAGES")
-    plt.show()
+    plt.savefig(DIR + 'output_plots/' + "ref_img.png")
+    # plt.show()
 
   def show_results(self):
     sorted_turtles = os.listdir(self.sorted_turtles)
@@ -167,7 +171,8 @@ class data_preparation():
 
 
     fig.suptitle("SORTED IMAGES")
-    plt.show()
+    plt.savefig(DIR + 'output_plots/' + "sorted_img.png")
+    # plt.show()
 
   def del_DS_Store(self, folder):
     folder_name = folder + '/'
@@ -268,7 +273,8 @@ class AI_base():
     plt.ylabel('accuracy')
     plt.xlabel('epoch')
     plt.legend(['train', 'test'], loc='upper left')
-    plt.show()
+    plt.savefig(DIR + 'output_plots/' + "acc.png")
+    # plt.show()
 
     plt.figure()
     ''' summarize history for loss '''
@@ -278,13 +284,14 @@ class AI_base():
     plt.ylabel('loss')
     plt.xlabel('epoch')
     plt.legend(['train', 'test'], loc='upper left')
-    plt.show()
+    plt.savefig(DIR + 'output_plots/' + "loss.png")
+    # plt.show()
 
   def save(self):
    self.model.save('my_model.h5') 
 
   def load(self):
-   self.model = tf.keras.models.load_model('my_model.h5')
+   self.model = tf.keras.models.load_model(DIR + 'my_model.h5')
 
   def process_image(self, img_path, show=False):
 
@@ -313,23 +320,23 @@ if __name__ == "__main__":
   print('$> Reference data:')
   print('   *total turtles images:', len(data.turtles_fnames))
   print('   *total fishes images:', len(data.fishes_fnames))
-  data.show_ref_images()
+  # data.show_ref_images()
 
   ''' prepare images for AI classification - mix images '''
   print('\n\tMix images started ... ')
   data.mix_pictures()
   print('$> Total mixed images:', len(data.mixed_photos_fnames))
-  data.show_mixed_images()
+  # data.show_mixed_images()
 
   print('\n$> Create AI model -  started ...')
   neuron = AI_base()
 
-  neuron.create_model()
-  neuron.train()
+  # neuron.create_model()
+  # neuron.train()
   # neuron.save()
-  neuron.plot_model_history()
+  # neuron.plot_model_history()
 
-  # neuron.load()
+  neuron.load()
   
   print('$> Create AI model -  success')
 
@@ -357,6 +364,7 @@ if __name__ == "__main__":
       print ("  *Image idx: ", idx)
       err += 1
 
-  print('$> SUM:', err)
+  print('$> *sum:', err)
 
-  data.show_results()
+  # data.show_results()
+  print('&> Done')

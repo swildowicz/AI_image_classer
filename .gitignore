@@ -1,1 +1,5 @@
 output_plots/
+__MACOSX/
+mixed/
+sorted/
+data_folder/
