@@ -47,6 +47,7 @@ class data_preparation():
                       self.sorted_fishes]
     self.mark_data = []
     self.sorted_data = []
+    self.predicted_data = []
 
   def create_folders(self):
     for dir in self.dir_list:
@@ -172,6 +173,12 @@ class data_preparation():
 
     fig.suptitle("SORTED IMAGES")
     plt.savefig(DIR + 'output_plots/' + "sorted_img.png")
+    plt.show()
+    num = [i for i, img_path in enumerate(self.mark_data)]
+    predicted = [data[0][0] for i, data in enumerate(self.predicted_data)]
+    fig = plt.gcf()
+    plt.bar(num, predicted)
+    plt.show()
     # plt.show()
 
   def del_DS_Store(self, folder):
@@ -344,6 +351,7 @@ if __name__ == "__main__":
   print('\n$> Classification started ...')
   for img, fname in zip(data.mixed_images_list, data.mixed_photos_fnames):
     prediction = neuron.process_image(img)
+    data.predicted_data.append(prediction)
     if(prediction < 0.5):
       idx = fname.split('.png')
       data.sorted_data[int(idx[0])] = 0
